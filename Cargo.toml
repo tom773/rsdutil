@@ -1,0 +1,9 @@
+[package]
+name = "rsutil"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cairo-rs = { git = "https://github.com/gtk-rs/gtk-rs-core.git", package = "cairo-rs" }
+adw = { version = "0.6.0", package = "libadwaita", features = ["v1_5"] }
+gtk = { version = "0.8.2", package = "gtk4", features = ["v4_14"] }
