@@ -2,7 +2,7 @@
 name = "rsdutil"
 version = "0.1.0"
 authors = ["Tom Matthews"]
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 libc = "0.2.155"

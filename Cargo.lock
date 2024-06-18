@@ -659,7 +659,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rsutil"
+name = "rsdutil"
 version = "0.1.0"
 dependencies = [
  "cairo-rs 0.20.0",
