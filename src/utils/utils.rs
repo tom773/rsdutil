@@ -77,7 +77,7 @@ unsafe fn calculate_dir_size_c(c_path: &CString, ignore: &HashSet<&str>) -> Resu
             continue;
         }
 
-        let entry_path = format!("/{}/{}", c_path.to_str().unwrap(), entry_name);
+        let entry_path = format!("{}/{}", c_path.to_str().unwrap(), entry_name);
         let entry_path_c = CString::new(entry_path.clone()).unwrap();
     
         if should_ignore(&entry_path, ignore) {
@@ -85,10 +85,11 @@ unsafe fn calculate_dir_size_c(c_path: &CString, ignore: &HashSet<&str>) -> Resu
         }
 
         let mut stat_buf: stat = mem::zeroed();
-        if (stat_buf.st_mode & S_IFLNK) == S_IFLNK {
+        if libc::lstat(entry_path_c.as_ptr(), &mut stat_buf) == -1 {
             continue;
         }
-        if libc::stat(entry_path_c.as_ptr(), &mut stat_buf) == -1 {
+
+        if (stat_buf.st_mode & S_IFMT) == S_IFLNK {
             continue;
         }
 
