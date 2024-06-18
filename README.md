@@ -16,7 +16,7 @@ Rsdutil is a fast GUI utility designed for use with Hyprland specifically. The u
 ### Usage
 
 ```
-tar -xvf rsdutil_v0.1.0.zip
+unzip rsdutil_v0.1.0.zip
 ./rsdutil
 ```
 Ideally you'd bind this to a key in your window manager, or link it to the system tray. I will write an install script for this soon.
