@@ -1,3 +1,3 @@
 /target
-.svg
-.data
+flamegraph.svg
+perf.data

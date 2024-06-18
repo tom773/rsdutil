@@ -1,7 +1,7 @@
 use gtk::prelude::*;
 use std::collections::HashMap;
 use adw::ApplicationWindow;
-use gtk::{DrawingArea, Grid, Overlay};
+use gtk::{DrawingArea, Grid, Overlay, Label};
 
 pub fn build_ui(app: &adw::Application, ds: &HashMap<&str, f64>, ts: &f64, tf: &f64){
     
@@ -17,13 +17,16 @@ pub fn build_ui(app: &adw::Application, ds: &HashMap<&str, f64>, ts: &f64, tf: &
     for (i, (label_text, progress)) in ds.iter().enumerate() {
         let row = i / 2;
         let col = i % 2;
-        let overlay = create_pbar(label_text.to_string(), *progress, *progress/ *tf);
+        let overlay = create_pbar(label_text.to_string(), *progress, *progress/ *tf, *ts);
         grid.attach(&overlay, col as i32, row as i32, 1, 1);
     }
+    let used_label = Label::new(Some(format!("Used: {:.2}GB of {:.2}GB Available ({:.2}%)", ts, tf, ts/tf*100.0).as_str()));
+    used_label.set_widget_name("used-label");
 
     let vbox = gtk::Box::new(gtk::Orientation::Vertical, 5);
     vbox.set_widget_name("pb");
     vbox.append(&grid);
+    vbox.append(&used_label);
     
     let window = ApplicationWindow::builder()
         .application(app)
@@ -34,13 +37,13 @@ pub fn build_ui(app: &adw::Application, ds: &HashMap<&str, f64>, ts: &f64, tf: &
     window.present();
 }
 
-pub fn create_pbar(label_text: String, used: f64, progress: f64) -> Overlay{
+pub fn create_pbar(label_text: String, used: f64, progress: f64, total: f64) -> Overlay{
     
     let drawing_area = DrawingArea::new();
     drawing_area.set_widget_name("drawing-area");
-    drawing_area.set_size_request(220, 260);
+    drawing_area.set_size_request(160, 200);
     drawing_area.set_draw_func(move |_, cr, _, _| {
-        pbar(cr, progress, &label_text, &used); // Adjust the progress value here
+        pbar(cr, progress, &label_text, &used, &total); // Adjust the progress value here
     });
 
 
@@ -54,10 +57,10 @@ pub fn create_pbar(label_text: String, used: f64, progress: f64) -> Overlay{
 }
 
 // Refactor into utils
-pub fn pbar(cr: &gtk::cairo::Context, progress: f64, label_text: &str, used: &f64) {
-    let width: f64 = 220.0;
-    let height: f64 = 220.0;
-    let line_width = 40.0;
+pub fn pbar(cr: &gtk::cairo::Context, progress: f64, label_text: &str, used: &f64, total: &f64) {
+    let width: f64 = 160.0;
+    let height: f64 = 160.0;
+    let line_width = 30.0;
 
     cr.set_source_rgba(0.0, 0.0, 0.0, 0.0); // Background color
     let _ = cr.paint();
@@ -91,7 +94,7 @@ pub fn pbar(cr: &gtk::cairo::Context, progress: f64, label_text: &str, used: &f6
 fn draw_text(cr: &gtk::cairo::Context, text: &str, x: f64, y: f64) {
     cr.set_source_rgb(1.0, 1.0, 1.0);
     cr.select_font_face("JetBrains Mono", gtk::cairo::FontSlant::Normal, gtk::cairo::FontWeight::Normal);
-    cr.set_font_size(20.0);
+    cr.set_font_size(16.0);
 
     let extents = cr.text_extents(text).unwrap();
     cr.move_to(x - extents.width() / 2.0, y + extents.height() / 2.0);

@@ -11,3 +11,9 @@
     font-size: 20px;
     font-family: 'JetBrains Mono';
 }
+
+#used-label {
+    color: white;
+    font-size: 16px;
+    font-family: 'JetBrains Mono';
+}
