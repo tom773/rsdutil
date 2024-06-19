@@ -53,7 +53,7 @@ fn get_free_space<P: AsRef<Path>>(folder_path: P) -> Result<u64, String> {
     let result = unsafe { statvfs(c_path.as_ptr(), &mut stat) };
 
     if result == 0 {
-        let free_space = stat.f_bfree * stat.f_bsize as u64;
+        let free_space = stat.f_frsize * stat.f_blocks as u64;
         Ok(free_space)
     } else {
         Err("Failed to get filesystem statistics".to_string())
